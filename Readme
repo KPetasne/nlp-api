@@ -1,0 +1,15 @@
+Cómo levantar el proyecto con Docker
+
+1️⃣ Construir la imagen
+docker build -t nlp_api .
+
+2️⃣ Ejecutar el contenedor
+docker run -p 8000:8000 nlp_api
+
+3️⃣ Acceder a la API
+
+POST /entrenar/ → Entrena el modelo
+
+GET /evaluar/?texto="Texto de prueba" → Evalúa un texto
+
+POST /autoentrenamiento/ → Autoentrenamiento con nuevas frases
