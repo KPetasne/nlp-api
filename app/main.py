@@ -1,9 +1,25 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request, HTTPException
+import os
+from dotenv import load_dotenv
 from app.train import entrenar_modelo
 from app.evaluate import evaluar_texto
 from app.auto_train import autoentrenar_modelo
 
+load_dotenv()  # Cargar variables de entorno
+API_KEY_SECRETA = os.getenv("API_KEY_SECRETA")
+
 app = FastAPI()
+
+@app.middleware("http")
+async def validar_api_key(request: Request, call_next):
+    """Intercepta cada request para validar la API Key."""
+    api_key = request.headers.get("X-API-KEY")
+
+    if not api_key or api_key != API_KEY_SECRETA:
+        raise HTTPException(status_code=403, detail="Acceso denegado: API Key inválida")
+
+    response = await call_next(request)
+    return response
 
 @app.post("/entrenar/")
 def entrenar():
